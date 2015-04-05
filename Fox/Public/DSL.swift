@@ -7,20 +7,34 @@ public func Assert(
     numberOfTests: UInt? = nil,
     maximumSize: UInt? = nil,
     file: String = __FILE__,
-    line: UInt = __LINE__) {
+    line: UInt32 = __LINE__) {
+    _FOXAssert(property, "", file, line, FOXOptions(
+        seed: seed ?? 0, numberOfTests: numberOfTests ?? 0, maximumSize: maximumSize ?? 0
+    ));
+}
 
-        let theSeed = (seed != nil) ? seed! : FOXGetSeed()
-        let numTests = (numberOfTests != nil) ? numberOfTests! : FOXGetNumberOfTests()
-        let maxSize = (maximumSize != nil) ? maximumSize! : FOXGetMaximumSize()
+/// Assert `property` with `numberOfTests` (using default values for `seed` and other parameters).
+public func Assert(
+    property: FOXGenerator,
+    numberOfTests: UInt?,
+    seed: UInt? = nil,
+    maximumSize: UInt? = nil,
+    file: String = __FILE__,
+    line: UInt32 = __LINE__) {
+    _FOXAssert(property, "", file, line, FOXOptions(
+        seed: seed ?? 0, numberOfTests: numberOfTests ?? 0, maximumSize: maximumSize ?? 0
+    ));
+}
 
-        var runner = FOXRunner.assertInstance()
-        var result = runner.resultForNumberOfTests(numTests,
-            property: property,
-            seed: theSeed,
-            maxSize: maxSize)
-
-        if !result.succeeded {
-            XCTFail("Property failed with: \(result.singleLineDescriptionOfSmallestValue())",
-                file: file, line: line)
-        }
+/// Assert `property` with `seed` (using default values for `numberOfTests` and other parameters).
+public func Assert(
+    property: FOXGenerator,
+    seed: UInt?,
+    numberOfTests: UInt? = nil,
+    maximumSize: UInt? = nil,
+    file: String = __FILE__,
+    line: UInt32 = __LINE__) {
+    _FOXAssert(property, "", file, line, FOXOptions(
+        seed: seed ?? 0, numberOfTests: numberOfTests ?? 0, maximumSize: maximumSize ?? 0
+    ));
 }
